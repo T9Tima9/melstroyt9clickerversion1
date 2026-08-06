@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mellstroy Burmalda Clicker</title>
+    <style>
+        :root {
+            --bg-color: #080810;
+            --card-bg: rgba(18, 18, 32, 0.75);
+            --neon-pink: #ff007f;
+            --neon-green: #00ff66;
+            --neon-cyan: #00f3ff;
+            --neon-yellow: #ffea00;
+            --neon-purple: #b026ff;
+            --text-color: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(255, 0, 127, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 243, 255, 0.08) 0%, transparent 40%);
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            gap: 30px;
+            width: 95%;
+            max-width: 1200px;
+            height: 90vh;
+            padding: 20px;
+        }
+
+        /* Игровая зона */
+        .game-zone {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--card-bg);
+            border: 2px solid var(--neon-cyan);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2), inset 0 0 15px rgba(0, 243, 255, 0.1);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .score-board {
+            text-align: center;
+        }
+
+        .score-board h1 {
+            font-size: 2.8rem;
+            color: #fff;
+            text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
+            margin-bottom: 5px;
+        }
+
+        .score-board p {
+            font-size: 1.1rem;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 5px var(--neon-cyan);
+        }
+
+        .click-area {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .mell-avatar-wrapper {
+            position: relative;
+            width: 240px;
+            height: 240px;
+            border-radius: 50%;
+            padding: 8px;
+            background: linear-gradient(45deg, var(--neon-pink), var(--neon-cyan), var(--neon-yellow));
+            box-shadow: 0 0 30px var(--neon-pink);
+            animation: pulse-glow 3s infinite alternate;
+            cursor: pointer;
+            transition: transform 0.05s ease;
+        }
+
+        .mell-avatar-wrapper:active {
+            transform: scale(0.95);
+        }
+
+        .mell-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--bg-color);
+        }
+
+        @keyframes pulse-glow {
+            0% { box-shadow: 0 0 20px var(--neon-pink); }
+            100% { box-shadow: 0 0 40px var(--neon-purple), 0 0 60px var(--neon-cyan); }
+        }
+
+        /* Вылетающие надписи +1 */
+        .floating-text {
+            position: absolute;
+            font-weight: bold;
+            font-size: 1.8rem;
+            color: var(--neon-yellow);
+            text-shadow: 0 0 8px var(--neon-yellow), 0 0 15px #ff8800;
+            pointer-events: none;
+            animation: floatUp 0.8s forwards ease-out;
+            z-index: 100;
+        }
+
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0) scale(1); }
+            100% { opacity: 0; transform: translateY(-80px) scale(1.3); }
+        }
+
+        /* Магазин */
+        .shop-zone {
+            flex: 1.2;
+            background: var(--card-bg);
+            border: 2px solid var(--neon-pink);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.2), inset 0 0 15px rgba(255, 0, 127, 0.1);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .shop-title {
+            font-size: 1.8rem;
+            text-align: center;
+            color: #fff;
+            text-shadow: 0 0 10px var(--neon-pink);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 0, 127, 0.3);
+        }
+
+        .shop-items {
+            overflow-y: auto;
+            flex: 1;
+            padding-right: 5px;
+        }
+
+        .shop-items::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .shop-items::-webkit-scrollbar-thumb {
+            background: var(--neon-pink);
+            border-radius: 10px;
+            box-shadow: 0 0 10px var(--neon-pink);
+        }
+
+        .shop-item {
+            background: rgba(30, 30, 50, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px 15px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .shop-item:hover {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+            transform: translateX(3px);
+        }
+
+        .item-info h4 {
+            font-size: 1rem;
+            color: #fff;
+            margin-bottom: 3px;
+        }
+
+        .item-info p {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        .item-btn {
+            background: transparent;
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 5px var(--neon-green);
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .item-btn:hover:not(:disabled) {
+            background: var(--neon-green);
+            color: #000;
+            box-shadow: 0 0 15px var(--neon-green);
+        }
+
+        .item-btn:disabled {
+            border-color: #555;
+            color: #555;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+            }
+            .game-zone, .shop-zone {
+                width: 100%;
+                height: 500px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Игровой экран -->
+    <div class="game-zone">
+        <div class="score-board">
+            <h1 id="score">0</h1>
+            <p>Бурмалды в секунду: <span id="cps">0</span></p>
+            <p>Сила клика: <span id="click-power">1</span></p>
+        </div>
+
+        <div class="click-area" id="click-area">
+            <div class="mell-avatar-wrapper" id="mell-btn">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6sV77G57Z55wZ4yX43W1yT1gV4u60W7N-7A&s" alt="Мелстрой" class="mell-avatar" id="mell-img">
+            </div>
+        </div>
+    </div>
+
+    <!-- Магазин -->
+    <div class="shop-zone">
+        <div class="shop-title">НЕОНОВЫЙ ШОП</div>
+        <div class="shop-items" id="shop-container">
+            <!-- Элементы генерируются через JS -->
+        </div>
+    </div>
+</div>
+
+<script>
+    // Состояние игры
+    let score = 0;
+    let clickPower = 1;
+    let autoCps = 0;
+
+    // Цены и уровни
+    let mellLevel = 1;
+    let mellCost = 10;
+    
+    let autoLevel = 0;
+    let autoCost = 15;
+
+    // Аватары Мелстроя для разных уровней эволюции
+    const mellAvatars = [
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6sV77G57Z55wZ4yX43W1yT1gV4u60W7N-7A&s",
+        "https://api.dicebear.com/7.x/bottts/svg?seed=MellstroyRich",
+        "https://api.dicebear.com/7.x/bottts/svg?seed=MellstroyGold",
+        "https://api.dicebear.com/7.x/bottts/svg?seed=MellstroyDiamond",
+        "https://api.dicebear.com/7.x/bottts/svg?seed=MellstroyGod"
+    ];
+
+    // 10 уникальных предметов в магазине
+    const shopItems = [
+        { id: 'item1', name: 'Энергетик "Боров"', cost: 50, cps: 2, count: 0, desc: '+2 Бурмалды/сек' },
+        { id: 'item2', name: 'Мания Казино', cost: 150, cps: 8, count: 0, desc: '+8 Бурмалды/сек' },
+        { id: 'item3', name: 'Подписота в ТТ', cost: 500, cps: 25, count: 0, desc: '+25 Бурмалды/сек' },
+        { id: 'item4', name: 'Зеленый Экран', cost: 1200, cps: 65, count: 0, desc: '+65 Бурмалды/сек' },
+        { id: 'item5', name: 'Донат Стримеру', cost: 3500, cps: 150, count: 0, desc: '+150 Бурмалды/сек' },
+        { id: 'item6', name: 'Аренда Майбаха', cost: 10000, cps: 400, count: 0, desc: '+400 Бурмалды/сек' },
+        { id: 'item7', name: 'Вилла в Дубае', cost: 30000, cps: 1000, count: 0, desc: '+1000 Бурмалды/сек' },
+        { id: 'item8', name: 'Конкурс на Миллион', cost: 100000, cps: 3500, count: 0, desc: '+3500 Бурмалды/сек' },
+        { id: 'item9', name: 'Крипто-Ферма Мела', cost: 350000, cps: 10000, count: 0, desc: '+10000 Бурмалды/сек' },
+        { id: 'item10', name: 'Собственный ИИ-Мелстрой', cost: 1000000, cps: 35000, count: 0, desc: '+35000 Бурмалды/сек' }
+    ];
+
+    // Элементы DOM
+    const scoreEl = document.getElementById('score');
+    const cpsEl = document.getElementById('cps');
+    const clickPowerEl = document.getElementById('click-power');
+    const mellBtn = document.getElementById('mell-btn');
+    const mellImg = document.getElementById('mell-img');
+    const clickArea = document.getElementById('click-area');
+    const shopContainer = document.getElementById('shop-container');
+
+    // Клик по Мелстрою
+    mellBtn.addEventListener('click', (e) => {
+        score += clickPower;
+        updateUI();
+        createFloatingText(e, `+${clickPower} бурмалда`);
+    });
+
+    // Создание вылетающего текста
+    function createFloatingText(e, text) {
+        const rect = clickArea.getBoundingClientRect();
+        const x = e.clientX - rect.left - 40;
+        const y = e.clientY - rect.top - 20;
+
+        const el = document.createElement('div');
+        el.className = 'floating-text';
+        el.innerText = text;
+        el.style.left = `${x}px`;
+        el.style.top = `${y}px`;
+
+        clickArea.appendChild(el);
+
+        setTimeout(() => {
+            el.remove();
+        }, 800);
+    }
+
+    // Рендер магазина
+    function renderShop() {
+        shopContainer.innerHTML = '';
+
+        <!-- Прокачка Клика Мелстроя -->
+        const mellItem = document.createElement('div');
+        mellItem.className = 'shop-item';
+        mellItem.innerHTML = `
+            <div class="item-info">
+                <h4>Прокачать Мелстроя (Ур. ${mellLevel})</h4>
+                <p>Увеличивает клик. Даёт +${mellLevel + 1} за клик</p>
+            </div>
+            <button class="item-btn" id="buy-mell" ${score < mellCost ? 'disabled' : ''}>
+                ${Math.floor(mellCost)} 💰
+            </button>
+        `;
+        shopContainer.appendChild(mellItem);
+
+        document.getElementById('buy-mell').addEventListener('click', () => {
+            if (score >= mellCost) {
+                score -= mellCost;
+                mellLevel++;
+                clickPower = mellLevel;
+                mellCost = Math.floor(mellCost * 1.8);
+                
+                // Смена скина при определённых уровнях
+                const imgIndex = Math.min(mellLevel - 1, mellAvatars.length - 1);
+                mellImg.src = mellAvatars[imgIndex];
+                
+                renderShop();
+                updateUI();
+            }
+        });
+
+        <!-- Прокачка Авто-Фермы -->
+        const autoItem = document.createElement('div');
+        autoItem.className = 'shop-item';
+        autoItem.innerHTML = `
+            <div class="item-info">
+                <h4>Базовый Кликер (Ур. ${autoLevel})</h4>
+                <p>Базовая автоферма (+1 Бурмалда/сек)</p>
+            </div>
+            <button class="item-btn" id="buy-auto" ${score < autoCost ? 'disabled' : ''}>
+                ${Math.floor(autoCost)} 💰
+            </button>
+        `;
+        shopContainer.appendChild(autoItem);
+
+        document.getElementById('buy-auto').addEventListener('click', () => {
+            if (score >= autoCost) {
+                score -= autoCost;
+                autoLevel++;
+                autoCps += 1;
+                autoCost = Math.floor(autoCost * 1.5);
+                renderShop();
+                updateUI();
+            }
+        });
+
+        <!-- 10 предметов -->
+        shopItems.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'shop-item';
+            div.innerHTML = `
+                <div class="item-info">
+                    <h4>${item.name} (${item.count})</h4>
+                    <p>${item.desc}</p>
+                </div>
+                <button class="item-btn" id="buy-${item.id}" ${score < item.cost ? 'disabled' : ''}>
+                    ${Math.floor(item.cost)} 💰
+                </button>
+            `;
+            shopContainer.appendChild(div);
+
+            document.getElementById(`buy-${item.id}`).addEventListener('click', () => {
+                if (score >= item.cost) {
+                    score -= item.cost;
+                    item.count++;
+                    autoCps += item.cps;
+                    item.cost = Math.floor(item.cost * 1.4);
+                    renderShop();
+                    updateUI();
+                }
+            });
+        });
+    }
+
+    // Обновление UI
+    function updateUI() {
+        scoreEl.innerText = Math.floor(score);
+        cpsEl.innerText = autoCps;
+        clickPowerEl.innerText = clickPower;
+
+        // Проверка доступности кнопок без полного перерендера
+        const buttons = shopContainer.querySelectorAll('.item-btn');
+        let index = 0;
+
+        // Кнопка Мела
+        buttons[0].disabled = score < mellCost;
+        // Кнопка Авто
+        buttons[1].disabled = score < autoCost;
+
+        // Кнопки 10 предметов
+        shopItems.forEach((item, i) => {
+            if (buttons[i + 2]) {
+                buttons[i + 2].disabled = score < item.cost;
+            }
+        });
+    }
+
+    // Игровой таймер (1 секунда)
+    setInterval(() => {
+        if (autoCps > 0) {
+            score += autoCps;
+            updateUI();
+        }
+    }, 1000);
+
+    // Первичная инициализация
+    renderShop();
+    updateUI();
+</script>
+</body>
+</html>
+
