@@ -403,6 +403,18 @@
             }
         });
 
+
+
+
+document.addEventListener('DOMContentLoaded', _ => {
+  const elem = document.querySelector('#test')
+  if (localStorage.getItem('elem')) elem.disabled = true;
+  const btn = document.querySelector('#btn')
+  btn.addEventListener("click", function() {
+    elem.disabled = true;
+    localStorage.setItem('elem', 1)
+  })
+})
         // 10 предметов
         shopItems.forEach((item, index) => {
             const div = document.createElement('div');
