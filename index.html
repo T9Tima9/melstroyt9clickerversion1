@@ -119,7 +119,7 @@
             100% { box-shadow: 0 0 40px var(--neon-purple), 0 0 60px var(--neon-cyan); }
         }
 
-        /* Вылетающие надписи +1 */
+        /* Вылетающие надписи */
         .floating-text {
             position: absolute;
             font-weight: bold;
@@ -255,7 +255,7 @@
 
         <div class="click-area" id="click-area">
             <div class="mell-avatar-wrapper" id="mell-btn">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6sV77G57Z55wZ4yX43W1yT1gV4u60W7N-7A&s" alt="Мелстрой" class="mell-avatar" id="mell-img">
+                <img src="image.jpg" alt="Мелстрой" class="mell-avatar" id="mell-img">
             </div>
         </div>
     </div>
@@ -282,16 +282,20 @@
     let autoLevel = 0;
     let autoCost = 15;
 
-    // Аватары Мелстроя для разных уровней эволюции
+    // Картинки Мелстроя: image.jpg, image2.jpg, ..., image9.jpg
     const mellAvatars = [
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6sV77G57Z55wZ4yX43W1yT1gV4u60W7N-7A&s",
-        "https://api.dicebear.com/7.x/bottts/svg?seed=MellstroyRich",
-        "https://api.dicebear.com/7.x/bottts/svg?seed=MellstroyGold",
-        "https://api.dicebear.com/7.x/bottts/svg?seed=MellstroyDiamond",
-        "https://api.dicebear.com/7.x/bottts/svg?seed=MellstroyGod"
+        "image.jpg",
+        "image2.jpg",
+        "image3.jpg",
+        "image4.jpg",
+        "image5.jpg",
+        "image6.jpg",
+        "image7.jpg",
+        "image8.jpg",
+        "image9.jpg"
     ];
 
-    // 10 уникальных предметов в магазине
+    // 10 предметов в магазине
     const shopItems = [
         { id: 'item1', name: 'Энергетик "Боров"', cost: 50, cps: 2, count: 0, desc: '+2 Бурмалды/сек' },
         { id: 'item2', name: 'Мания Казино', cost: 150, cps: 8, count: 0, desc: '+8 Бурмалды/сек' },
@@ -344,7 +348,7 @@
     function renderShop() {
         shopContainer.innerHTML = '';
 
-        <!-- Прокачка Клика Мелстроя -->
+        // Прокачка Клика Мелстроя
         const mellItem = document.createElement('div');
         mellItem.className = 'shop-item';
         mellItem.innerHTML = `
@@ -365,7 +369,7 @@
                 clickPower = mellLevel;
                 mellCost = Math.floor(mellCost * 1.8);
                 
-                // Смена скина при определённых уровнях
+                // Смена картинки при прокачке (от image.jpg до image9.jpg)
                 const imgIndex = Math.min(mellLevel - 1, mellAvatars.length - 1);
                 mellImg.src = mellAvatars[imgIndex];
                 
@@ -374,13 +378,13 @@
             }
         });
 
-        <!-- Прокачка Авто-Фермы -->
+        // Прокачка Авто-Фермы
         const autoItem = document.createElement('div');
         autoItem.className = 'shop-item';
         autoItem.innerHTML = `
             <div class="item-info">
-                <h4>Базовый Кликер (Ур. ${autoLevel})</h4>
-                <p>Базовая автоферма (+1 Бурмалда/сек)</p>
+                <h4>Авто-ферма (Ур. ${autoLevel})</h4>
+                <p>Автоматическая добыча (+1 Бурмалда/сек)</p>
             </div>
             <button class="item-btn" id="buy-auto" ${score < autoCost ? 'disabled' : ''}>
                 ${Math.floor(autoCost)} 💰
@@ -399,7 +403,7 @@
             }
         });
 
-        <!-- 10 предметов -->
+        // 10 предметов
         shopItems.forEach((item, index) => {
             const div = document.createElement('div');
             div.className = 'shop-item';
@@ -433,16 +437,11 @@
         cpsEl.innerText = autoCps;
         clickPowerEl.innerText = clickPower;
 
-        // Проверка доступности кнопок без полного перерендера
         const buttons = shopContainer.querySelectorAll('.item-btn');
-        let index = 0;
 
-        // Кнопка Мела
-        buttons[0].disabled = score < mellCost;
-        // Кнопка Авто
-        buttons[1].disabled = score < autoCost;
+        if (buttons[0]) buttons[0].disabled = score < mellCost;
+        if (buttons[1]) buttons[1].disabled = score < autoCost;
 
-        // Кнопки 10 предметов
         shopItems.forEach((item, i) => {
             if (buttons[i + 2]) {
                 buttons[i + 2].disabled = score < item.cost;
@@ -450,7 +449,7 @@
         });
     }
 
-    // Игровой таймер (1 секунда)
+    // Игровой таймер (каждую секунду)
     setInterval(() => {
         if (autoCps > 0) {
             score += autoCps;
@@ -458,7 +457,7 @@
         }
     }, 1000);
 
-    // Первичная инициализация
+    // Инициализация
     renderShop();
     updateUI();
 </script>
