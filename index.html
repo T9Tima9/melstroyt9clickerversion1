@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mellstroy Burmalda Clicker</title>
+    <title>Mellstroy Burmalda Clicker Deluxe</title>
     <style>
         :root {
             --bg-color: #080810;
-            --card-bg: rgba(18, 18, 32, 0.75);
+            --card-bg: rgba(18, 18, 32, 0.85);
             --neon-pink: #ff007f;
             --neon-green: #00ff66;
             --neon-cyan: #00f3ff;
@@ -33,20 +33,21 @@
             align-items: center;
             overflow-x: hidden;
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(255, 0, 127, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(0, 243, 255, 0.08) 0%, transparent 40%);
+                radial-gradient(circle at 10% 20%, rgba(255, 0, 127, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 243, 255, 0.1) 0%, transparent 40%);
         }
 
         .container {
             display: flex;
             flex-direction: row;
-            gap: 30px;
-            width: 95%;
-            max-width: 1200px;
-            height: 90vh;
-            padding: 20px;
+            gap: 20px;
+            width: 98%;
+            max-width: 1280px;
+            height: 92vh;
+            padding: 15px;
         }
 
+        /* Игровая зона */
         .game-zone {
             flex: 1;
             display: flex;
@@ -56,10 +57,9 @@
             background: var(--card-bg);
             border: 2px solid var(--neon-cyan);
             border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2), inset 0 0 15px rgba(0, 243, 255, 0.1);
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
             backdrop-filter: blur(10px);
-            position: relative;
         }
 
         .score-board {
@@ -67,16 +67,15 @@
         }
 
         .score-board h1 {
-            font-size: 2.8rem;
+            font-size: 2.5rem;
             color: #fff;
             text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
-            margin-bottom: 5px;
         }
 
         .score-board p {
-            font-size: 1.1rem;
+            font-size: 1rem;
             color: var(--neon-cyan);
-            text-shadow: 0 0 5px var(--neon-cyan);
+            margin-top: 4px;
         }
 
         .click-area {
@@ -90,10 +89,10 @@
 
         .mell-avatar-wrapper {
             position: relative;
-            width: 240px;
-            height: 240px;
+            width: 220px;
+            height: 220px;
             border-radius: 50%;
-            padding: 8px;
+            padding: 6px;
             background: linear-gradient(45deg, var(--neon-pink), var(--neon-cyan), var(--neon-yellow));
             box-shadow: 0 0 30px var(--neon-pink);
             animation: pulse-glow 3s infinite alternate;
@@ -102,7 +101,7 @@
         }
 
         .mell-avatar-wrapper:active {
-            transform: scale(0.95);
+            transform: scale(0.93);
         }
 
         .mell-avatar {
@@ -121,9 +120,9 @@
         .floating-text {
             position: absolute;
             font-weight: bold;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             color: var(--neon-yellow);
-            text-shadow: 0 0 8px var(--neon-yellow), 0 0 15px #ff8800;
+            text-shadow: 0 0 8px var(--neon-yellow);
             pointer-events: none;
             animation: floatUp 0.8s forwards ease-out;
             z-index: 100;
@@ -131,122 +130,173 @@
 
         @keyframes floatUp {
             0% { opacity: 1; transform: translateY(0) scale(1); }
-            100% { opacity: 0; transform: translateY(-80px) scale(1.3); }
+            100% { opacity: 0; transform: translateY(-80px) scale(1.2); }
         }
 
-        .shop-zone {
-            flex: 1.2;
+        /* Правая функциональная зона */
+        .right-zone {
+            flex: 1.3;
             background: var(--card-bg);
             border: 2px solid var(--neon-pink);
             border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 0 15px rgba(255, 0, 127, 0.2), inset 0 0 15px rgba(255, 0, 127, 0.1);
+            padding: 15px;
+            box-shadow: 0 0 15px rgba(255, 0, 127, 0.2);
             backdrop-filter: blur(10px);
             display: flex;
             flex-direction: column;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 8px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .tab-btn.active {
+            background: var(--neon-pink);
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 10px var(--neon-pink);
+        }
+
+        .tab-content {
+            display: none;
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tab-content::-webkit-scrollbar {
+            width: 5px;
+        }
+        .tab-content::-webkit-scrollbar-thumb {
+            background: var(--neon-pink);
+            border-radius: 10px;
         }
 
         .shop-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(255, 0, 127, 0.3);
-        }
-
-        .shop-title {
-            font-size: 1.8rem;
-            color: #fff;
-            text-shadow: 0 0 10px var(--neon-pink);
+            margin-bottom: 10px;
         }
 
         .reset-btn {
             background: transparent;
             border: 1px solid #ff3333;
             color: #ff3333;
-            padding: 5px 10px;
+            padding: 4px 8px;
             border-radius: 6px;
             font-size: 0.75rem;
             cursor: pointer;
-            transition: all 0.2s;
         }
 
         .reset-btn:hover {
             background: #ff3333;
             color: #fff;
-            box-shadow: 0 0 8px #ff3333;
         }
 
-        .shop-items {
-            overflow-y: auto;
-            flex: 1;
-            padding-right: 5px;
-        }
-
-        .shop-items::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .shop-items::-webkit-scrollbar-thumb {
-            background: var(--neon-pink);
-            border-radius: 10px;
-            box-shadow: 0 0 10px var(--neon-pink);
-        }
-
-        .shop-item {
+        .card-item {
             background: rgba(30, 30, 50, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 12px 15px;
-            margin-bottom: 12px;
+            border-radius: 10px;
+            padding: 10px 12px;
+            margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: all 0.2s ease;
         }
 
-        .shop-item:hover {
-            border-color: var(--neon-cyan);
-            box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
-            transform: translateX(3px);
-        }
-
-        .item-info h4 {
-            font-size: 1rem;
+        .card-info h4 {
+            font-size: 0.95rem;
             color: #fff;
-            margin-bottom: 3px;
         }
 
-        .item-info p {
-            font-size: 0.8rem;
+        .card-info p {
+            font-size: 0.75rem;
             color: #aaa;
+            margin-top: 2px;
         }
 
-        .item-btn {
+        .btn-action {
             background: transparent;
             border: 1px solid var(--neon-green);
             color: var(--neon-green);
-            padding: 8px 14px;
-            border-radius: 8px;
+            padding: 6px 12px;
+            border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 0 5px var(--neon-green);
+            font-size: 0.8rem;
             transition: all 0.2s;
-            white-space: nowrap;
         }
 
-        .item-btn:hover:not(:disabled) {
+        .btn-action:hover:not(:disabled) {
             background: var(--neon-green);
             color: #000;
-            box-shadow: 0 0 15px var(--neon-green);
+            box-shadow: 0 0 10px var(--neon-green);
         }
 
-        .item-btn:disabled {
+        .btn-action:disabled {
             border-color: #555;
             color: #555;
-            box-shadow: none;
             cursor: not-allowed;
+        }
+
+        /* Банк и Крипта стили */
+        .sub-section {
+            background: rgba(20, 20, 35, 0.7);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .sub-section h3 {
+            font-size: 1rem;
+            color: var(--neon-cyan);
+            margin-bottom: 8px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .input-group input {
+            flex: 1;
+            background: #000;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 6px;
+            border-radius: 6px;
+        }
+
+        select {
+            background: #000;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px;
+            border-radius: 6px;
         }
 
         @media (max-width: 900px) {
@@ -254,7 +304,7 @@
                 flex-direction: column;
                 height: auto;
             }
-            .game-zone, .shop-zone {
+            .game-zone, .right-zone {
                 width: 100%;
                 height: 500px;
             }
@@ -264,10 +314,11 @@
 <body>
 
 <div class="container">
+    <!-- Левая панель: Кликер -->
     <div class="game-zone">
         <div class="score-board">
             <h1 id="score">0</h1>
-            <p>Бурмалды в секунду: <span id="cps">0</span></p>
+            <p>Бурмалды/сек: <span id="cps">0</span></p>
             <p>Сила клика: <span id="click-power">1</span></p>
         </div>
 
@@ -278,18 +329,67 @@
         </div>
     </div>
 
-    <div class="shop-zone">
+    <!-- Правая панель: Вкладки -->
+    <div class="right-zone">
         <div class="shop-header">
-            <div class="shop-title">НЕОНОВЫЙ ШОП</div>
+            <div style="font-weight: bold; color: var(--neon-pink);" id="timer-info">Цены крипты через: 30s</div>
             <button class="reset-btn" id="reset-btn">Сброс</button>
         </div>
-        <div class="shop-items" id="shop-container"></div>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('shop')">Шоп</button>
+            <button class="tab-btn" onclick="switchTab('crypto')">Крипта</button>
+            <button class="tab-btn" onclick="switchTab('bank')">Банк</button>
+            <button class="tab-btn" onclick="switchTab('business')">Бизнес</button>
+        </div>
+
+        <!-- ВКЛАДКА: МАГАЗИН -->
+        <div id="tab-shop" class="tab-content active"></div>
+
+        <!-- ВКЛАДКА: КРИПТА -->
+        <div id="tab-crypto" class="tab-content"></div>
+
+        <!-- ВКЛАДКА: БАНК -->
+        <div id="tab-bank" class="tab-content">
+            <div class="sub-section">
+                <h3>Вклад (5% каждые 30 сек)</h3>
+                <p>На вкладе: <b id="deposit-amount" style="color:var(--neon-green)">0</b> 💰</p>
+                <div class="input-group">
+                    <input type="number" id="deposit-input" placeholder="Сумма" min="1">
+                    <button class="btn-action" onclick="depositMoney()">Внести</button>
+                    <button class="btn-action" onclick="withdrawMoney()">Снять все</button>
+                </div>
+            </div>
+
+            <div class="sub-section">
+                <h3>Взять Кредит (макс x5 от баланса)</h3>
+                <p>Дог к выплате: <b id="loan-amount" style="color:#ff3333">0</b> 💰</p>
+                <p id="loan-timer-text" style="font-size: 0.8rem; color: var(--neon-yellow)"></p>
+                <div class="input-group" style="margin-top:6px;">
+                    <input type="number" id="loan-input" placeholder="Сумма" min="1">
+                    <select id="loan-term">
+                        <option value="1">1 мин (+5%)</option>
+                        <option value="3">3 мин (+10%)</option>
+                        <option value="5">5 мин (+15%)</option>
+                        <option value="10">10 мин (+25%)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <button class="btn-action" onclick="takeLoan()" style="flex:1">Взять кредит</button>
+                    <button class="btn-action" onclick="payLoan()" style="flex:1">Погасить долг</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ВКЛАДКА: БИЗНЕС -->
+        <div id="tab-business" class="tab-content"></div>
     </div>
 </div>
 
 <script>
-    let isResetting = false; // Флаг для блокировки автосохранения при сбросе
+    let isResetting = false;
 
+    // Игровой баланс и характеристики
     let score = 0;
     let clickPower = 1;
     let autoCps = 0;
@@ -300,57 +400,79 @@
     let autoLevel = 0;
     let autoCost = 15;
 
+    // Аватарки 1..9
     const mellAvatars = [
-        "image.jpg",
-        "image2.jpg",
-        "image3.jpg",
-        "image4.jpg",
-        "image5.jpg",
-        "image6.jpg",
-        "image7.jpg",
-        "image8.jpg",
-        "image9.jpg"
+        "image.jpg", "image2.jpg", "image3.jpg", "image4.jpg", "image5.jpg",
+        "image6.jpg", "image7.jpg", "image8.jpg", "image9.jpg"
     ];
 
+    // 10 Уникальных товаров в магазине
     let shopItems = [
-        { id: 'item1', name: 'Энергетик "Боров"', cost: 50, cps: 2, count: 0, desc: '+2 Бурмалды/сек' },
-        { id: 'item2', name: 'Мания Казино', cost: 150, cps: 8, count: 0, desc: '+8 Бурмалды/сек' },
-        { id: 'item3', name: 'Подписота в ТТ', cost: 500, cps: 25, count: 0, desc: '+25 Бурмалды/сек' },
-        { id: 'item4', name: 'Зеленый Экран', cost: 1200, cps: 65, count: 0, desc: '+65 Бурмалды/сек' },
-        { id: 'item5', name: 'Донат Стримеру', cost: 3500, cps: 150, count: 0, desc: '+150 Бурмалды/сек' },
-        { id: 'item6', name: 'Аренда Майбаха', cost: 10000, cps: 400, count: 0, desc: '+400 Бурмалды/сек' },
-        { id: 'item7', name: 'Вилла в Дубае', cost: 30000, cps: 1000, count: 0, desc: '+1000 Бурмалды/сек' },
-        { id: 'item8', name: 'Конкурс на Миллион', cost: 100000, cps: 3500, count: 0, desc: '+3500 Бурмалды/сек' },
-        { id: 'item9', name: 'Крипто-Ферма Мела', cost: 350000, cps: 10000, count: 0, desc: '+10000 Бурмалды/сек' },
-        { id: 'item10', name: 'Собственный ИИ-Мелстрой', cost: 1000000, cps: 35000, count: 0, desc: '+35000 Бурмалды/сек' }
+        { id: 'item1', name: 'Чат-бот с цитатами', cost: 50, cps: 2, count: 0, desc: '+2 Бурмалды/сек' },
+        { id: 'item2', name: 'Стримерская комната', cost: 250, cps: 8, count: 0, desc: '+8 Бурмалды/сек' },
+        { id: 'item3', name: 'VIP-подписка Kick', cost: 1000, cps: 30, count: 0, desc: '+30 Бурмалды/сек' },
+        { id: 'item4', name: 'Контракт с Мелстроем', cost: 4000, cps: 110, count: 0, desc: '+110 Бурмалды/сек' },
+        { id: 'item5', name: 'Студия подкастов', cost: 15000, cps: 380, count: 0, desc: '+380 Бурмалды/сек' },
+        { id: 'item6', name: 'Флот Ламборгини', cost: 50000, cps: 1200, count: 0, desc: '+1200 Бурмалды/сек' },
+        { id: 'item7', name: 'Личный остров на Бали', cost: 200000, cps: 4500, count: 0, desc: '+4500 Бурмалды/сек' },
+        { id: 'item8', name: 'Космический стрим', cost: 750000, cps: 15000, count: 0, desc: '+15000 Бурмалды/сек' },
+        { id: 'item9', name: 'Майнинг-центр Мела', cost: 2500000, cps: 50000, count: 0, desc: '+50000 Бурмалды/сек' },
+        { id: 'item10', name: 'Метавселенная Бурмалды', cost: 10000000, cps: 180000, count: 0, desc: '+180000 Бурмалды/сек' }
     ];
 
-    function saveGame() {
-        if (isResetting) return; // Не сохраняем, если выполняется сброс
+    // Криптовалюты
+    let cryptos = [
+        { id: 'btc', name: 'Bitcoin (BTC)', min: 10000, max: 10000000, price: 500000, owned: 0 },
+        { id: 'mell', name: 'MellCoin (MELL)', min: 100000, max: 50000000, price: 2000000, owned: 0 },
+        { id: 'burm', name: 'Burmalda Token (BURM)', min: 1000000, max: 200000000, price: 15000000, owned: 0 }
+    ];
 
-        const gameData = {
-            score,
-            clickPower,
-            autoCps,
-            mellLevel,
-            mellCost,
-            autoLevel,
-            autoCost,
-            shopItems: shopItems.map(item => ({ id: item.id, count: item.count, cost: item.cost }))
-        };
-        localStorage.setItem('mellstroy_clicker_save', JSON.stringify(gameData));
+    // Банк
+    let bankDeposit = 0;
+    let bankLoan = 0;
+    let loanEndTime = 0;
+
+    // Бизнесы
+    let businesses = [
+        { id: 'b1', name: 'Компьютерный Клуб', cost: 50000, cps: 1500, bought: false },
+        { id: 'b2', name: 'Сеть Барбершопов', cost: 500000, cps: 12000, bought: false },
+        { id: 'b3', name: 'Элитное Казино', cost: 5000000, cps: 100000, bought: false }
+    ];
+
+    let cryptoTimer = 30;
+
+    // Переключение вкладок
+    function switchTab(tabName) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+        event.target.classList.add('active');
+        document.getElementById(`tab-${tabName}`).classList.add('active');
     }
 
+    // Расчет CPS
     function recalculateCps() {
-        let totalCps = autoLevel * 1;
-        shopItems.forEach(item => {
-            totalCps += item.count * item.cps;
-        });
-        autoCps = totalCps;
+        let total = autoLevel * 1;
+        shopItems.forEach(i => total += i.count * i.cps);
+        businesses.forEach(b => { if (b.bought) total += b.cps; });
+        autoCps = total;
+    }
+
+    // Сохранение и Загрузка
+    function saveGame() {
+        if (isResetting) return;
+        const data = {
+            score, clickPower, mellLevel, mellCost, autoLevel, autoCost,
+            shopItems: shopItems.map(i => ({ id: i.id, count: i.count, cost: i.cost })),
+            cryptos: cryptos.map(c => ({ id: c.id, price: c.price, owned: c.owned })),
+            bankDeposit, bankLoan, loanEndTime,
+            businesses: businesses.map(b => ({ id: b.id, bought: b.bought }))
+        };
+        localStorage.setItem('mellstroy_clicker_v2', JSON.stringify(data));
     }
 
     function loadGame() {
-        const saved = localStorage.getItem('mellstroy_clicker_save');
+        const saved = localStorage.getItem('mellstroy_clicker_v2');
         if (saved) {
             try {
                 const data = JSON.parse(saved);
@@ -360,41 +482,51 @@
                 mellCost = Number(data.mellCost) || 10;
                 autoLevel = Number(data.autoLevel) || 0;
                 autoCost = Number(data.autoCost) || 15;
+                bankDeposit = Number(data.bankDeposit) || 0;
+                bankLoan = Number(data.bankLoan) || 0;
+                loanEndTime = Number(data.loanEndTime) || 0;
 
-                if (Array.isArray(data.shopItems)) {
-                    data.shopItems.forEach((savedItem) => {
-                        const target = shopItems.find(i => i.id === savedItem.id);
-                        if (target) {
-                            target.count = Number(savedItem.count) || 0;
-                            target.cost = Number(savedItem.cost) || target.cost;
-                        }
+                if (data.shopItems) {
+                    data.shopItems.forEach(s => {
+                        let item = shopItems.find(i => i.id === s.id);
+                        if (item) { item.count = s.count; item.cost = s.cost; }
+                    });
+                }
+                if (data.cryptos) {
+                    data.cryptos.forEach(c => {
+                        let crypto = cryptos.find(cr => cr.id === c.id);
+                        if (crypto) { crypto.price = c.price; crypto.owned = c.owned; }
+                    });
+                }
+                if (data.businesses) {
+                    data.businesses.forEach(b => {
+                        let biz = businesses.find(bz => bz.id === b.id);
+                        if (biz) { biz.bought = b.bought; }
                     });
                 }
                 recalculateCps();
-            } catch (e) {
-                console.error("Ошибка загрузки сохранения:", e);
-            }
+            } catch(e) { console.error(e); }
         }
     }
 
+    // Элементы
     const scoreEl = document.getElementById('score');
     const cpsEl = document.getElementById('cps');
     const clickPowerEl = document.getElementById('click-power');
     const mellBtn = document.getElementById('mell-btn');
     const mellImg = document.getElementById('mell-img');
     const clickArea = document.getElementById('click-area');
-    const shopContainer = document.getElementById('shop-container');
-    const resetBtn = document.getElementById('reset-btn');
 
+    // Клик
     mellBtn.addEventListener('click', (e) => {
         score += clickPower;
         updateUI();
-        createFloatingText(e, `+${clickPower} бурмалда`);
+        createFloatingText(e, `+${clickPower}`);
     });
 
     function createFloatingText(e, text) {
         const rect = clickArea.getBoundingClientRect();
-        const x = e.clientX - rect.left - 40;
+        const x = e.clientX - rect.left - 20;
         const y = e.clientY - rect.top - 20;
 
         const el = document.createElement('div');
@@ -402,100 +534,248 @@
         el.innerText = text;
         el.style.left = `${x}px`;
         el.style.top = `${y}px`;
-
         clickArea.appendChild(el);
-
-        setTimeout(() => {
-            el.remove();
-        }, 800);
+        setTimeout(() => el.remove(), 800);
     }
 
+    // Рендер Шопа
     function renderShop() {
-        shopContainer.innerHTML = '';
+        const container = document.getElementById('tab-shop');
+        container.innerHTML = '';
 
+        // Прокачка клика (коэффициент удорожания снижен до 1.35)
         const mellItem = document.createElement('div');
-        mellItem.className = 'shop-item';
+        mellItem.className = 'card-item';
         mellItem.innerHTML = `
-            <div class="item-info">
+            <div class="card-info">
                 <h4>Прокачать Мелстроя (Ур. ${mellLevel})</h4>
-                <p>Увеличивает клик. Даёт +${mellLevel + 1} за клик</p>
+                <p>Клик даёт +${mellLevel + 1}</p>
             </div>
-            <button class="item-btn" id="buy-mell" ${score < mellCost ? 'disabled' : ''}>
+            <button class="btn-action" id="buy-mell" ${score < mellCost ? 'disabled' : ''}>
                 ${Math.floor(mellCost)} 💰
             </button>
         `;
-        shopContainer.appendChild(mellItem);
+        container.appendChild(mellItem);
 
-        document.getElementById('buy-mell').addEventListener('click', () => {
+        document.getElementById('buy-mell').onclick = () => {
             if (score >= mellCost) {
                 score -= mellCost;
                 mellLevel++;
                 clickPower = mellLevel;
-                mellCost = Math.floor(mellCost * 1.8);
-                
+                mellCost = Math.floor(mellCost * 1.35); // Плавное подорожание!
                 updateAvatar();
                 renderShop();
                 updateUI();
                 saveGame();
             }
-        });
+        };
 
+        // Авто-ферма
         const autoItem = document.createElement('div');
-        autoItem.className = 'shop-item';
+        autoItem.className = 'card-item';
         autoItem.innerHTML = `
-            <div class="item-info">
+            <div class="card-info">
                 <h4>Авто-ферма (Ур. ${autoLevel})</h4>
-                <p>Автоматическая добыча (+1 Бурмалда/сек)</p>
+                <p>Добыча +1 Бурмалда/сек</p>
             </div>
-            <button class="item-btn" id="buy-auto" ${score < autoCost ? 'disabled' : ''}>
+            <button class="btn-action" id="buy-auto" ${score < autoCost ? 'disabled' : ''}>
                 ${Math.floor(autoCost)} 💰
             </button>
         `;
-        shopContainer.appendChild(autoItem);
+        container.appendChild(autoItem);
 
-        document.getElementById('buy-auto').addEventListener('click', () => {
+        document.getElementById('buy-auto').onclick = () => {
             if (score >= autoCost) {
                 score -= autoCost;
                 autoLevel++;
+                autoCost = Math.floor(autoCost * 1.4);
                 recalculateCps();
-                autoCost = Math.floor(autoCost * 1.5);
                 renderShop();
                 updateUI();
                 saveGame();
             }
-        });
+        };
 
-        shopItems.forEach((item) => {
+        // 10 уникальных предметов
+        shopItems.forEach(item => {
             const div = document.createElement('div');
-            div.className = 'shop-item';
+            div.className = 'card-item';
             div.innerHTML = `
-                <div class="item-info">
+                <div class="card-info">
                     <h4>${item.name} (${item.count})</h4>
                     <p>${item.desc}</p>
                 </div>
-                <button class="item-btn" id="buy-${item.id}" ${score < item.cost ? 'disabled' : ''}>
+                <button class="btn-action" id="buy-${item.id}" ${score < item.cost ? 'disabled' : ''}>
                     ${Math.floor(item.cost)} 💰
                 </button>
             `;
-            shopContainer.appendChild(div);
+            container.appendChild(div);
 
-            document.getElementById(`buy-${item.id}`).addEventListener('click', () => {
+            document.getElementById(`buy-${item.id}`).onclick = () => {
                 if (score >= item.cost) {
                     score -= item.cost;
                     item.count++;
-                    recalculateCps();
                     item.cost = Math.floor(item.cost * 1.4);
+                    recalculateCps();
                     renderShop();
                     updateUI();
                     saveGame();
                 }
-            });
+            };
         });
     }
 
+    // Рендер Крипты
+    function renderCrypto() {
+        const container = document.getElementById('tab-crypto');
+        container.innerHTML = '';
+
+        cryptos.forEach(c => {
+            const div = document.createElement('div');
+            div.className = 'card-item';
+            div.innerHTML = `
+                <div class="card-info">
+                    <h4>${c.name}</h4>
+                    <p>Курс: <b style="color:var(--neon-yellow)">${c.price.toLocaleString()}</b> 💰</p>
+                    <p>В наличии: <b>${c.owned}</b></p>
+                </div>
+                <div style="display:flex; gap:4px;">
+                    <button class="btn-action" onclick="buyCrypto('${c.id}')">Купить</button>
+                    <button class="btn-action" onclick="sellCrypto('${c.id}')">Продать</button>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function buyCrypto(id) {
+        let c = cryptos.find(cr => cr.id === id);
+        if (score >= c.price) {
+            score -= c.price;
+            c.owned++;
+            renderCrypto();
+            updateUI();
+            saveGame();
+        }
+    }
+
+    function sellCrypto(id) {
+        let c = cryptos.find(cr => cr.id === id);
+        if (c.owned > 0) {
+            c.owned--;
+            score += c.price;
+            renderCrypto();
+            updateUI();
+            saveGame();
+        }
+    }
+
+    // Обновление курса крипты раз в 30 секунд
+    function updateCryptoPrices() {
+        cryptos.forEach(c => {
+            c.price = Math.floor(Math.random() * (c.max - c.min + 1)) + c.min;
+        });
+        renderCrypto();
+    }
+
+    // Банковские функции
+    function depositMoney() {
+        const input = document.getElementById('deposit-input');
+        const val = Math.floor(Number(input.value));
+        if (val > 0 && score >= val) {
+            score -= val;
+            bankDeposit += val;
+            input.value = '';
+            updateUI();
+            saveGame();
+        }
+    }
+
+    function withdrawMoney() {
+        if (bankDeposit > 0) {
+            score += bankDeposit;
+            bankDeposit = 0;
+            updateUI();
+            saveGame();
+        }
+    }
+
+    function takeLoan() {
+        if (bankLoan > 0) {
+            alert("Сначала погасите существующий кредит!");
+            return;
+        }
+        const input = document.getElementById('loan-input');
+        const termSelect = document.getElementById('loan-term');
+        const amount = Math.floor(Number(input.value));
+        const maxLoan = Math.max(1000, score * 5); // До х5 от суммы
+
+        if (amount <= 0 || amount > maxLoan) {
+            alert(`Максимальный кредит: ${maxLoan} 💰`);
+            return;
+        }
+
+        const term = Number(termSelect.value);
+        let percent = 0.05;
+        if (term === 3) percent = 0.10;
+        if (term === 5) percent = 0.15;
+        if (term === 10) percent = 0.25;
+
+        bankLoan = Math.floor(amount * (1 + percent));
+        score += amount;
+        loanEndTime = Date.now() + (term * 60 * 1000);
+        input.value = '';
+        updateUI();
+        saveGame();
+    }
+
+    function payLoan() {
+        if (bankLoan > 0 && score >= bankLoan) {
+            score -= bankLoan;
+            bankLoan = 0;
+            loanEndTime = 0;
+            updateUI();
+            saveGame();
+        }
+    }
+
+    // Рендер Бизнесов
+    function renderBusiness() {
+        const container = document.getElementById('tab-business');
+        container.innerHTML = '';
+
+        businesses.forEach(b => {
+            const div = document.createElement('div');
+            div.className = 'card-item';
+            div.innerHTML = `
+                <div class="card-info">
+                    <h4>${b.name} ${b.bought ? '(Куплено)' : ''}</h4>
+                    <p>Прибыль: +${b.cps} Бурмалды/сек</p>
+                </div>
+                <button class="btn-action" onclick="buyBusiness('${b.id}')" ${b.bought || score < b.cost ? 'disabled' : ''}>
+                    ${b.bought ? 'Владелец' : b.cost + ' 💰'}
+                </button>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function buyBusiness(id) {
+        let b = businesses.find(bz => bz.id === id);
+        if (!b.bought && score >= b.cost) {
+            score -= b.cost;
+            b.bought = true;
+            recalculateCps();
+            renderBusiness();
+            updateUI();
+            saveGame();
+        }
+    }
+
+    // Правильное вращение аватарок 1..9 по кругу
     function updateAvatar() {
-        const imgIndex = Math.min(mellLevel - 1, mellAvatars.length - 1);
-        mellImg.src = mellAvatars[imgIndex];
+        const index = (mellLevel - 1) % mellAvatars.length;
+        mellImg.src = mellAvatars[index];
     }
 
     function updateUI() {
@@ -503,52 +783,66 @@
         cpsEl.innerText = autoCps;
         clickPowerEl.innerText = clickPower;
 
-        const buttons = shopContainer.querySelectorAll('.item-btn');
+        document.getElementById('deposit-amount').innerText = Math.floor(bankDeposit).toLocaleString();
+        document.getElementById('loan-amount').innerText = Math.floor(bankLoan).toLocaleString();
 
-        if (buttons[0]) buttons[0].disabled = score < mellCost;
-        if (buttons[1]) buttons[1].disabled = score < autoCost;
-
-        shopItems.forEach((item, i) => {
-            if (buttons[i + 2]) {
-                buttons[i + 2].disabled = score < item.cost;
+        // Таймер кредита
+        if (bankLoan > 0 && loanEndTime > 0) {
+            let leftSec = Math.max(0, Math.floor((loanEndTime - Date.now()) / 1000));
+            document.getElementById('loan-timer-text').innerText = `Осталось времени: ${leftSec} сек.`;
+            if (leftSec === 0) {
+                // Принудительное списание если срок вышел
+                score = Math.max(0, score - bankLoan);
+                bankLoan = 0;
+                loanEndTime = 0;
             }
-        });
+        } else {
+            document.getElementById('loan-timer-text').innerText = '';
+        }
+
+        renderShop();
+        renderCrypto();
+        renderBusiness();
     }
 
-    // Сброс прогресса
-    resetBtn.addEventListener('click', () => {
-        if (confirm("Вы уверены, что хотите сбросить весь прогресс?")) {
-            isResetting = true; // Блокируем автосохранение
-            localStorage.removeItem('mellstroy_clicker_save');
+    // Сброс
+    document.getElementById('reset-btn').onclick = () => {
+        if (confirm("Вы точно хотите сбросить весь прогресс?")) {
+            isResetting = true;
+            localStorage.removeItem('mellstroy_clicker_v2');
             location.reload();
         }
-    });
+    };
 
-    // Инициализация при старте
+    // Инициализация
     loadGame();
     updateAvatar();
-    renderShop();
     updateUI();
 
-    // Авто-начисление доходности
+    // Таймер авто-дохода и 30-секундный цикл
     setInterval(() => {
         if (autoCps > 0) {
             score += autoCps;
-            updateUI();
         }
+
+        // Таймер обновления крипты и процента по вкладам (раз в 30 секунд)
+        cryptoTimer--;
+        if (cryptoTimer <= 0) {
+            cryptoTimer = 30;
+            updateCryptoPrices();
+
+            if (bankDeposit > 0) {
+                bankDeposit = Math.floor(bankDeposit * 1.05); // 5% на вклад каждые 30 сек
+            }
+        }
+        document.getElementById('timer-info').innerText = `Крипта/Вклад через: ${cryptoTimer}s`;
+
+        updateUI();
     }, 1000);
 
-    // Автосохранение каждые 2 секунды
-    setInterval(saveGame, 2000);
-
-    // Гарантированное сохранение при закрытии/переключении вкладки
-    document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'hidden') {
-            saveGame();
-        }
-    });
+    // Автосохранение
+    setInterval(saveGame, 3000);
     window.addEventListener('beforeunload', saveGame);
 </script>
 </body>
 </html>
-
