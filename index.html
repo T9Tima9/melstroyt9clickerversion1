@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mellstroy Burmalda Clicker T9</title>
+    <title>Mellstroy Burmalda Clicker</title>
     <style>
         :root {
             --bg-color: #080810;
@@ -149,14 +149,36 @@
             flex-direction: column;
         }
 
-        .shop-title {
-            font-size: 1.8rem;
-            text-align: center;
-            color: #fff;
-            text-shadow: 0 0 10px var(--neon-pink);
+        .shop-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 15px;
             padding-bottom: 10px;
             border-bottom: 1px solid rgba(255, 0, 127, 0.3);
+        }
+
+        .shop-title {
+            font-size: 1.8rem;
+            color: #fff;
+            text-shadow: 0 0 10px var(--neon-pink);
+        }
+
+        .reset-btn {
+            background: transparent;
+            border: 1px solid #ff3333;
+            color: #ff3333;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .reset-btn:hover {
+            background: #ff3333;
+            color: #fff;
+            box-shadow: 0 0 8px #ff3333;
         }
 
         .shop-items {
@@ -262,7 +284,10 @@
 
     <!-- Магазин -->
     <div class="shop-zone">
-        <div class="shop-title">НЕОНОВЫЙ ШОП</div>
+        <div class="shop-header">
+            <div class="shop-title">НЕОНОВЫЙ ШОП</div>
+            <button class="reset-btn" id="reset-btn">Сброс</button>
+        </div>
         <div class="shop-items" id="shop-container">
             <!-- Элементы генерируются через JS -->
         </div>
@@ -270,19 +295,17 @@
 </div>
 
 <script>
-    // Состояние игры
+    // Состояние игры по умолчанию
     let score = 0;
     let clickPower = 1;
     let autoCps = 0;
 
-    // Цены и уровни
     let mellLevel = 1;
     let mellCost = 10;
     
     let autoLevel = 0;
     let autoCost = 15;
 
-    // Картинки Мелстроя: image.jpg, image2.jpg, ..., image9.jpg
     const mellAvatars = [
         "image.jpg",
         "image2.jpg",
@@ -295,8 +318,7 @@
         "image9.jpg"
     ];
 
-    // 10 предметов в магазине
-    const shopItems = [
+    let shopItems = [
         { id: 'item1', name: 'Энергетик "Боров"', cost: 50, cps: 2, count: 0, desc: '+2 Бурмалды/сек' },
         { id: 'item2', name: 'Мания Казино', cost: 150, cps: 8, count: 0, desc: '+8 Бурмалды/сек' },
         { id: 'item3', name: 'Подписота в ТТ', cost: 500, cps: 25, count: 0, desc: '+25 Бурмалды/сек' },
@@ -309,6 +331,49 @@
         { id: 'item10', name: 'Собственный ИИ-Мелстрой', cost: 1000000, cps: 35000, count: 0, desc: '+35000 Бурмалды/сек' }
     ];
 
+    // Логика сохранения в localStorage
+    function saveGame() {
+        const gameData = {
+            score,
+            clickPower,
+            autoCps,
+            mellLevel,
+            mellCost,
+            autoLevel,
+            autoCost,
+            shopItems: shopItems.map(item => ({ id: item.id, count: item.count, cost: item.cost }))
+        };
+        localStorage.setItem('mellstroy_clicker_save', JSON.stringify(gameData));
+    }
+
+    function loadGame() {
+        const saved = localStorage.getItem('mellstroy_clicker_save');
+        if (saved) {
+            try {
+                const data = JSON.parse(saved);
+                score = data.score || 0;
+                clickPower = data.clickPower || 1;
+                autoCps = data.autoCps || 0;
+                mellLevel = data.mellLevel || 1;
+                mellCost = data.mellCost || 10;
+                autoLevel = data.autoLevel || 0;
+                autoCost = data.autoCost || 15;
+
+                if (data.shopItems) {
+                    data.shopItems.forEach((savedItem) => {
+                        const target = shopItems.find(i => i.id === savedItem.id);
+                        if (target) {
+                            target.count = savedItem.count || 0;
+                            target.cost = savedItem.cost || target.cost;
+                        }
+                    });
+                }
+            } catch (e) {
+                console.error("Ошибка загрузки сохранения:", e);
+            }
+        }
+    }
+
     // Элементы DOM
     const scoreEl = document.getElementById('score');
     const cpsEl = document.getElementById('cps');
@@ -317,6 +382,7 @@
     const mellImg = document.getElementById('mell-img');
     const clickArea = document.getElementById('click-area');
     const shopContainer = document.getElementById('shop-container');
+    const resetBtn = document.getElementById('reset-btn');
 
     // Клик по Мелстрою
     mellBtn.addEventListener('click', (e) => {
@@ -369,12 +435,10 @@
                 clickPower = mellLevel;
                 mellCost = Math.floor(mellCost * 1.8);
                 
-                // Смена картинки при прокачке (от image.jpg до image9.jpg)
-                const imgIndex = Math.min(mellLevel - 1, mellAvatars.length - 1);
-                mellImg.src = mellAvatars[imgIndex];
-                
+                updateAvatar();
                 renderShop();
                 updateUI();
+                saveGame();
             }
         });
 
@@ -400,23 +464,12 @@
                 autoCost = Math.floor(autoCost * 1.5);
                 renderShop();
                 updateUI();
+                saveGame();
             }
         });
 
-
-
-
-document.addEventListener('DOMContentLoaded', _ => {
-  const elem = document.querySelector('#test')
-  if (localStorage.getItem('elem')) elem.disabled = true;
-  const btn = document.querySelector('#btn')
-  btn.addEventListener("click", function() {
-    elem.disabled = true;
-    localStorage.setItem('elem', 1)
-  })
-})
         // 10 предметов
-        shopItems.forEach((item, index) => {
+        shopItems.forEach((item) => {
             const div = document.createElement('div');
             div.className = 'shop-item';
             div.innerHTML = `
@@ -438,9 +491,16 @@ document.addEventListener('DOMContentLoaded', _ => {
                     item.cost = Math.floor(item.cost * 1.4);
                     renderShop();
                     updateUI();
+                    saveGame();
                 }
             });
         });
+    }
+
+    // Обновление аватарки по уровню
+    function updateAvatar() {
+        const imgIndex = Math.min(mellLevel - 1, mellAvatars.length - 1);
+        mellImg.src = mellAvatars[imgIndex];
     }
 
     // Обновление UI
@@ -461,7 +521,21 @@ document.addEventListener('DOMContentLoaded', _ => {
         });
     }
 
-    // Игровой таймер (каждую секунду)
+    // Сброс прогресса
+    resetBtn.addEventListener('click', () => {
+        if (confirm("Вы уверены, что хотите сбросить весь прогресс?")) {
+            localStorage.removeItem('mellstroy_clicker_save');
+            location.reload();
+        }
+    });
+
+    // Инициализация при старте
+    loadGame();
+    updateAvatar();
+    renderShop();
+    updateUI();
+
+    // Авто-начисление доходности в секунду
     setInterval(() => {
         if (autoCps > 0) {
             score += autoCps;
@@ -469,10 +543,9 @@ document.addEventListener('DOMContentLoaded', _ => {
         }
     }, 1000);
 
-    // Инициализация
-    renderShop();
-    updateUI();
+    // Автосохранение каждые 3 секунды и при закрытии страницы
+    setInterval(saveGame, 3000);
+    window.addEventListener('beforeunload', saveGame);
 </script>
 </body>
 </html>
-
