@@ -64,18 +64,32 @@
 
         .score-board {
             text-align: center;
+            width: 100%;
         }
 
         .score-board h1 {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             color: #fff;
-            text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green);
+            text-shadow: 0 0 10px var(--neon-green);
         }
 
-        .score-board p {
-            font-size: 1rem;
+        .currencies {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+            background: rgba(0,0,0,0.4);
+            padding: 8px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .currency-item {
+            font-size: 0.9rem;
             color: var(--neon-cyan);
-            margin-top: 4px;
+        }
+
+        .currency-item b {
+            color: #fff;
         }
 
         .click-area {
@@ -89,8 +103,8 @@
 
         .mell-avatar-wrapper {
             position: relative;
-            width: 220px;
-            height: 220px;
+            width: 210px;
+            height: 210px;
             border-radius: 50%;
             padding: 6px;
             background: linear-gradient(45deg, var(--neon-pink), var(--neon-cyan), var(--neon-yellow));
@@ -133,7 +147,7 @@
             100% { opacity: 0; transform: translateY(-80px) scale(1.2); }
         }
 
-        /* Правая функциональная зона */
+        /* Правая зона */
         .right-zone {
             flex: 1.3;
             background: var(--card-bg);
@@ -261,7 +275,6 @@
             cursor: not-allowed;
         }
 
-        /* Банк и Крипта стили */
         .sub-section {
             background: rgba(20, 20, 35, 0.7);
             border: 1px solid rgba(0, 243, 255, 0.2);
@@ -317,9 +330,15 @@
     <!-- Левая панель: Кликер -->
     <div class="game-zone">
         <div class="score-board">
-            <h1 id="score">0</h1>
-            <p>Бурмалды/сек: <span id="cps">0</span></p>
-            <p>Сила клика: <span id="click-power">1</span></p>
+            <h1 id="score">0 💰</h1>
+            <div class="currencies">
+                <div class="currency-item">Бурмалды/сек: <b id="cps">0</b></div>
+                <div class="currency-item">Сила клика: <b id="click-power">1</b></div>
+            </div>
+            <div class="currencies" style="margin-top:6px;">
+                <div class="currency-item">Подписчики: <b id="subs-count" style="color:var(--neon-pink)">0</b> (<span id="subs-cps">0</span>/сек)</div>
+                <div class="currency-item">Доллары: <b id="dollars-count" style="color:var(--neon-green)">0 $</b></div>
+            </div>
         </div>
 
         <div class="click-area" id="click-area">
@@ -329,7 +348,7 @@
         </div>
     </div>
 
-    <!-- Правая панель: Вкладки -->
+    <!-- Правая панель -->
     <div class="right-zone">
         <div class="shop-header">
             <div style="font-weight: bold; color: var(--neon-pink);" id="timer-info">Цены крипты через: 30s</div>
@@ -337,20 +356,36 @@
         </div>
 
         <div class="nav-tabs">
-            <button class="tab-btn active" onclick="switchTab('shop')">Шоп</button>
-            <button class="tab-btn" onclick="switchTab('crypto')">Крипта</button>
-            <button class="tab-btn" onclick="switchTab('bank')">Банк</button>
-            <button class="tab-btn" onclick="switchTab('business')">Бизнес</button>
+            <button class="tab-btn active" onclick="switchTab('shop', event)">Шоп</button>
+            <button class="tab-btn" onclick="switchTab('crypto', event)">Крипта</button>
+            <button class="tab-btn" onclick="switchTab('bank', event)">Банк</button>
+            <button class="tab-btn" onclick="switchTab('business', event)">Бизнес</button>
         </div>
 
-        <!-- ВКЛАДКА: МАГАЗИН -->
+        <!-- Вкладка Шоп -->
         <div id="tab-shop" class="tab-content active"></div>
 
-        <!-- ВКЛАДКА: КРИПТА -->
+        <!-- Вкладка Крипта -->
         <div id="tab-crypto" class="tab-content"></div>
 
-        <!-- ВКЛАДКА: БАНК -->
+        <!-- Вкладка Банк -->
         <div id="tab-bank" class="tab-content">
+            <!-- Обмен Валют -->
+            <div class="sub-section">
+                <h3>💱 Обменник валюты в Банке</h3>
+                <p style="font-size:0.8rem; color:#aaa; margin-bottom:6px;">
+                    • 1,000 Подписчиков ➔ <b style="color:var(--neon-green)">1 $</b><br>
+                    • 1 $ ➔ <b style="color:var(--neon-yellow)">10,000 Бурмалды</b>
+                </p>
+                <div class="input-group">
+                    <button class="btn-action" onclick="exchangeSubsToDollars()" style="flex:1">Обменять 1000 Подписчиков на 1$</button>
+                </div>
+                <div class="input-group">
+                    <button class="btn-action" onclick="exchangeDollarsToBurmalda()" style="flex:1">Обменять 1$ на 10,000 💰</button>
+                </div>
+            </div>
+
+            <!-- Вклад -->
             <div class="sub-section">
                 <h3>Вклад (5% каждые 30 сек)</h3>
                 <p>На вкладе: <b id="deposit-amount" style="color:var(--neon-green)">0</b> 💰</p>
@@ -361,8 +396,9 @@
                 </div>
             </div>
 
+            <!-- Кредит -->
             <div class="sub-section">
-                <h3>Взять Кредит (макс x5 от баланса)</h3>
+                <h3>Кредит (до x5 от баланса)</h3>
                 <p>Дог к выплате: <b id="loan-amount" style="color:#ff3333">0</b> 💰</p>
                 <p id="loan-timer-text" style="font-size: 0.8rem; color: var(--neon-yellow)"></p>
                 <div class="input-group" style="margin-top:6px;">
@@ -376,12 +412,12 @@
                 </div>
                 <div class="input-group">
                     <button class="btn-action" onclick="takeLoan()" style="flex:1">Взять кредит</button>
-                    <button class="btn-action" onclick="payLoan()" style="flex:1">Погасить долг</button>
+                    <button class="btn-action" onclick="payLoan()" style="flex:1; border-color:#ff3333; color:#ff3333;">Погасить долг</button>
                 </div>
             </div>
         </div>
 
-        <!-- ВКЛАДКА: БИЗНЕС -->
+        <!-- Вкладка Бизнес -->
         <div id="tab-business" class="tab-content"></div>
     </div>
 </div>
@@ -389,10 +425,14 @@
 <script>
     let isResetting = false;
 
-    // Игровой баланс и характеристики
-    let score = 0;
+    // Балансы
+    let score = 0;          // Бурмалды
+    let subscribers = 0;    // Подписчики
+    let dollars = 0;        // Доллары ($)
+
     let clickPower = 1;
-    let autoCps = 0;
+    let autoCps = 0;        // Бурмалды/сек (ТОЛЬКО от Авто-фермы)
+    let subsCps = 0;        // Подписчики/сек (от Бизнесов и бонусов)
 
     let mellLevel = 1;
     let mellCost = 10;
@@ -400,24 +440,23 @@
     let autoLevel = 0;
     let autoCost = 15;
 
-    // Аватарки 1..9
     const mellAvatars = [
         "image.jpg", "image2.jpg", "image3.jpg", "image4.jpg", "image5.jpg",
         "image6.jpg", "image7.jpg", "image8.jpg", "image9.jpg"
     ];
 
-    // 10 Уникальных товаров в магазине
+    // 10 Уникальных товаров - БЕЗ Бурмалды/сек и БЕЗ силы клика
     let shopItems = [
-        { id: 'item1', name: 'Чат-бот с цитатами', cost: 50, cps: 2, count: 0, desc: '+2 Бурмалды/сек' },
-        { id: 'item2', name: 'Стримерская комната', cost: 250, cps: 8, count: 0, desc: '+8 Бурмалды/сек' },
-        { id: 'item3', name: 'VIP-подписка Kick', cost: 1000, cps: 30, count: 0, desc: '+30 Бурмалды/сек' },
-        { id: 'item4', name: 'Контракт с Мелстроем', cost: 4000, cps: 110, count: 0, desc: '+110 Бурмалды/сек' },
-        { id: 'item5', name: 'Студия подкастов', cost: 15000, cps: 380, count: 0, desc: '+380 Бурмалды/сек' },
-        { id: 'item6', name: 'Флот Ламборгини', cost: 50000, cps: 1200, count: 0, desc: '+1200 Бурмалды/сек' },
-        { id: 'item7', name: 'Личный остров на Бали', cost: 200000, cps: 4500, count: 0, desc: '+4500 Бурмалды/сек' },
-        { id: 'item8', name: 'Космический стрим', cost: 750000, cps: 15000, count: 0, desc: '+15000 Бурмалды/сек' },
-        { id: 'item9', name: 'Майнинг-центр Мела', cost: 2500000, cps: 50000, count: 0, desc: '+50000 Бурмалды/сек' },
-        { id: 'item10', name: 'Метавселенная Бурмалды', cost: 10000000, cps: 180000, count: 0, desc: '+180000 Бурмалды/сек' }
+        { id: 'item1', name: 'Мем-кампания', cost: 100, count: 0, desc: '+10 Подписчиков/сек', perk: 'subs10' },
+        { id: 'item2', name: 'VIP Чат Модерация', cost: 500, count: 0, desc: '+5% к сумме с кредита', perk: 'loanBonus' },
+        { id: 'item3', name: 'Инвестор-партнер', cost: 2000, count: 0, desc: 'Вклад в банке приносит +1% каждые 30 сек', perk: 'depositBonus' },
+        { id: 'item4', name: 'Контракт с Kick', cost: 8000, count: 0, desc: '+100 Подписчиков/сек', perk: 'subs100' },
+        { id: 'item5', name: 'PR-Агентство', cost: 25000, count: 0, desc: 'Скидка 10% на покупку всех Бизнесов', perk: 'bizDiscount' },
+        { id: 'item6', name: 'Крипто-Бот', cost: 80000, count: 0, desc: '+10% к цене продажи любой криптовалюты', perk: 'cryptoBonus' },
+        { id: 'item7', name: 'Дубайский офис', cost: 300000, count: 0, desc: '+1,000 Подписчиков/сек', perk: 'subs1000' },
+        { id: 'item8', name: 'ИИ-Менеджер', cost: 1000000, count: 0, desc: 'Каждые 30 сек даёт бесплатно +1 $', perk: 'freeDollar' },
+        { id: 'item9', name: 'Медиа-Холдинг', cost: 5000000, count: 0, desc: '+10,000 Подписчиков/сек', perk: 'subs10000' },
+        { id: 'item10', name: 'Золотой Статус', cost: 20000000, count: 0, desc: 'Курс обмена: 1$ = 15,000 Бурмалды вместо 10k', perk: 'betterExchange' }
     ];
 
     // Криптовалюты
@@ -432,56 +471,77 @@
     let bankLoan = 0;
     let loanEndTime = 0;
 
-    // Бизнесы
+    // Бизнесы (Приносят ПОДПИСЧИКОВ в секунду)
     let businesses = [
-        { id: 'b1', name: 'Компьютерный Клуб', cost: 50000, cps: 1500, bought: false },
-        { id: 'b2', name: 'Сеть Барбершопов', cost: 500000, cps: 12000, bought: false },
-        { id: 'b3', name: 'Элитное Казино', cost: 5000000, cps: 100000, bought: false }
+        { id: 'b1', name: 'Компьютерный Клуб', cost: 50000, subCps: 50, bought: false },
+        { id: 'b2', name: 'Сеть Барбершопов', cost: 500000, subCps: 600, bought: false },
+        { id: 'b3', name: 'Элитное Казино', cost: 5000000, subCps: 8000, bought: false }
     ];
 
     let cryptoTimer = 30;
 
-    // Переключение вкладок
-    function switchTab(tabName) {
+    function switchTab(tabName, event) {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
 
-        event.target.classList.add('active');
+        if (event && event.target) {
+            event.target.classList.add('active');
+        }
         document.getElementById(`tab-${tabName}`).classList.add('active');
     }
 
-    // Расчет CPS
-    function recalculateCps() {
-        let total = autoLevel * 1;
-        shopItems.forEach(i => total += i.count * i.cps);
-        businesses.forEach(b => { if (b.bought) total += b.cps; });
-        autoCps = total;
+    function recalculateRates() {
+        // Единственная ферма Бурмалды в секунду:
+        autoCps = autoLevel * 1;
+
+        // Подписчики в секунду
+        let sCps = 0;
+        businesses.forEach(b => { if (b.bought) sCps += b.subCps; });
+
+        // Бонусы от шоп-предметов
+        let item1 = shopItems.find(i => i.id === 'item1');
+        if (item1) sCps += item1.count * 10;
+
+        let item4 = shopItems.find(i => i.id === 'item4');
+        if (item4) sCps += item4.count * 100;
+
+        let item7 = shopItems.find(i => i.id === 'item7');
+        if (item7) sCps += item7.count * 1000;
+
+        let item9 = shopItems.find(i => i.id === 'item9');
+        if (item9) sCps += item9.count * 10000;
+
+        subsCps = sCps;
     }
 
-    // Сохранение и Загрузка
+    // Сохранение и загрузка
     function saveGame() {
         if (isResetting) return;
         const data = {
-            score, clickPower, mellLevel, mellCost, autoLevel, autoCost,
+            score, subscribers, dollars, clickPower, mellLevel, mellCost, autoLevel, autoCost,
             shopItems: shopItems.map(i => ({ id: i.id, count: i.count, cost: i.cost })),
             cryptos: cryptos.map(c => ({ id: c.id, price: c.price, owned: c.owned })),
             bankDeposit, bankLoan, loanEndTime,
             businesses: businesses.map(b => ({ id: b.id, bought: b.bought }))
         };
-        localStorage.setItem('mellstroy_clicker_v2', JSON.stringify(data));
+        localStorage.setItem('mellstroy_clicker_v3', JSON.stringify(data));
     }
 
     function loadGame() {
-        const saved = localStorage.getItem('mellstroy_clicker_v2');
+        const saved = localStorage.getItem('mellstroy_clicker_v3');
         if (saved) {
             try {
                 const data = JSON.parse(saved);
                 score = Number(data.score) || 0;
+                subscribers = Number(data.subscribers) || 0;
+                dollars = Number(data.dollars) || 0;
+
                 clickPower = Number(data.clickPower) || 1;
                 mellLevel = Number(data.mellLevel) || 1;
                 mellCost = Number(data.mellCost) || 10;
                 autoLevel = Number(data.autoLevel) || 0;
                 autoCost = Number(data.autoCost) || 15;
+
                 bankDeposit = Number(data.bankDeposit) || 0;
                 bankLoan = Number(data.bankLoan) || 0;
                 loanEndTime = Number(data.loanEndTime) || 0;
@@ -489,7 +549,7 @@
                 if (data.shopItems) {
                     data.shopItems.forEach(s => {
                         let item = shopItems.find(i => i.id === s.id);
-                        if (item) { item.count = s.count; item.cost = s.cost; }
+                        if (item) { item.count = s.count || 0; item.cost = s.cost || item.cost; }
                     });
                 }
                 if (data.cryptos) {
@@ -504,12 +564,11 @@
                         if (biz) { biz.bought = b.bought; }
                     });
                 }
-                recalculateCps();
+                recalculateRates();
             } catch(e) { console.error(e); }
         }
     }
 
-    // Элементы
     const scoreEl = document.getElementById('score');
     const cpsEl = document.getElementById('cps');
     const clickPowerEl = document.getElementById('click-power');
@@ -517,7 +576,6 @@
     const mellImg = document.getElementById('mell-img');
     const clickArea = document.getElementById('click-area');
 
-    // Клик
     mellBtn.addEventListener('click', (e) => {
         score += clickPower;
         updateUI();
@@ -543,13 +601,13 @@
         const container = document.getElementById('tab-shop');
         container.innerHTML = '';
 
-        // Прокачка клика (коэффициент удорожания снижен до 1.35)
+        // Прокачка клика
         const mellItem = document.createElement('div');
         mellItem.className = 'card-item';
         mellItem.innerHTML = `
             <div class="card-info">
                 <h4>Прокачать Мелстроя (Ур. ${mellLevel})</h4>
-                <p>Клик даёт +${mellLevel + 1}</p>
+                <p>Увеличивает клик. Клик даёт +${mellLevel + 1}</p>
             </div>
             <button class="btn-action" id="buy-mell" ${score < mellCost ? 'disabled' : ''}>
                 ${Math.floor(mellCost)} 💰
@@ -562,7 +620,7 @@
                 score -= mellCost;
                 mellLevel++;
                 clickPower = mellLevel;
-                mellCost = Math.floor(mellCost * 1.35); // Плавное подорожание!
+                mellCost = Math.floor(mellCost * 1.35);
                 updateAvatar();
                 renderShop();
                 updateUI();
@@ -570,13 +628,13 @@
             }
         };
 
-        // Авто-ферма
+        // Единственная ферма Бурмалды/сек
         const autoItem = document.createElement('div');
         autoItem.className = 'card-item';
         autoItem.innerHTML = `
             <div class="card-info">
-                <h4>Авто-ферма (Ур. ${autoLevel})</h4>
-                <p>Добыча +1 Бурмалда/сек</p>
+                <h4>Единственная Авто-ферма (Ур. ${autoLevel})</h4>
+                <p>Единственный источник добычи (+1 Бурмалда/сек)</p>
             </div>
             <button class="btn-action" id="buy-auto" ${score < autoCost ? 'disabled' : ''}>
                 ${Math.floor(autoCost)} 💰
@@ -589,21 +647,21 @@
                 score -= autoCost;
                 autoLevel++;
                 autoCost = Math.floor(autoCost * 1.4);
-                recalculateCps();
+                recalculateRates();
                 renderShop();
                 updateUI();
                 saveGame();
             }
         };
 
-        // 10 уникальных предметов
+        // 10 Предметов с уникальными свойствами
         shopItems.forEach(item => {
             const div = document.createElement('div');
             div.className = 'card-item';
             div.innerHTML = `
                 <div class="card-info">
                     <h4>${item.name} (${item.count})</h4>
-                    <p>${item.desc}</p>
+                    <p style="color:var(--neon-cyan)">${item.desc}</p>
                 </div>
                 <button class="btn-action" id="buy-${item.id}" ${score < item.cost ? 'disabled' : ''}>
                     ${Math.floor(item.cost)} 💰
@@ -615,8 +673,8 @@
                 if (score >= item.cost) {
                     score -= item.cost;
                     item.count++;
-                    item.cost = Math.floor(item.cost * 1.4);
-                    recalculateCps();
+                    item.cost = Math.floor(item.cost * 1.45);
+                    recalculateRates();
                     renderShop();
                     updateUI();
                     saveGame();
@@ -630,13 +688,18 @@
         const container = document.getElementById('tab-crypto');
         container.innerHTML = '';
 
+        let cryptoBonusCount = shopItems.find(i => i.id === 'item6')?.count || 0;
+
         cryptos.forEach(c => {
+            let sellPrice = Math.floor(c.price * (1 + (cryptoBonusCount * 0.1)));
+
             const div = document.createElement('div');
             div.className = 'card-item';
             div.innerHTML = `
                 <div class="card-info">
                     <h4>${c.name}</h4>
-                    <p>Курс: <b style="color:var(--neon-yellow)">${c.price.toLocaleString()}</b> 💰</p>
+                    <p>Покупка: <b style="color:var(--neon-yellow)">${c.price.toLocaleString()}</b> 💰</p>
+                    <p>Продажа: <b style="color:var(--neon-green)">${sellPrice.toLocaleString()}</b> 💰</p>
                     <p>В наличии: <b>${c.owned}</b></p>
                 </div>
                 <div style="display:flex; gap:4px;">
@@ -662,15 +725,17 @@
     function sellCrypto(id) {
         let c = cryptos.find(cr => cr.id === id);
         if (c.owned > 0) {
+            let cryptoBonusCount = shopItems.find(i => i.id === 'item6')?.count || 0;
+            let sellPrice = Math.floor(c.price * (1 + (cryptoBonusCount * 0.1)));
+
             c.owned--;
-            score += c.price;
+            score += sellPrice;
             renderCrypto();
             updateUI();
             saveGame();
         }
     }
 
-    // Обновление курса крипты раз в 30 секунд
     function updateCryptoPrices() {
         cryptos.forEach(c => {
             c.price = Math.floor(Math.random() * (c.max - c.min + 1)) + c.min;
@@ -678,7 +743,34 @@
         renderCrypto();
     }
 
-    // Банковские функции
+    // БАНК И ОБМЕН ВАЛЮТ
+    function exchangeSubsToDollars() {
+        if (subscribers >= 1000) {
+            let count = Math.floor(subscribers / 1000);
+            subscribers -= count * 1000;
+            dollars += count;
+            updateUI();
+            saveGame();
+        } else {
+            alert("Нужно минимум 1,000 Подписчиков!");
+        }
+    }
+
+    function exchangeDollarsToBurmalda() {
+        if (dollars >= 1) {
+            let rate = 10000;
+            let hasBonus = shopItems.find(i => i.id === 'item10')?.count || 0;
+            if (hasBonus > 0) rate = 15000;
+
+            score += dollars * rate;
+            dollars = 0;
+            updateUI();
+            saveGame();
+        } else {
+            alert("У вас нет $ для обмена!");
+        }
+    }
+
     function depositMoney() {
         const input = document.getElementById('deposit-input');
         const val = Math.floor(Number(input.value));
@@ -708,7 +800,7 @@
         const input = document.getElementById('loan-input');
         const termSelect = document.getElementById('loan-term');
         const amount = Math.floor(Number(input.value));
-        const maxLoan = Math.max(1000, score * 5); // До х5 от суммы
+        const maxLoan = Math.max(1000, score * 5);
 
         if (amount <= 0 || amount > maxLoan) {
             alert(`Максимальный кредит: ${maxLoan} 💰`);
@@ -729,14 +821,23 @@
         saveGame();
     }
 
+    // Исправленная функция погашения долга!
     function payLoan() {
-        if (bankLoan > 0 && score >= bankLoan) {
-            score -= bankLoan;
-            bankLoan = 0;
-            loanEndTime = 0;
-            updateUI();
-            saveGame();
+        if (bankLoan <= 0) {
+            alert("У вас нет активного кредита!");
+            return;
         }
+        if (score < bankLoan) {
+            alert(`Недостаточно Бурмалды! Нужно: ${bankLoan.toLocaleString()} 💰`);
+            return;
+        }
+        
+        score -= bankLoan;
+        bankLoan = 0;
+        loanEndTime = 0;
+        alert("Поздравляем! Кредит полностью погашен.");
+        updateUI();
+        saveGame();
     }
 
     // Рендер Бизнесов
@@ -744,16 +845,20 @@
         const container = document.getElementById('tab-business');
         container.innerHTML = '';
 
+        let discountCount = shopItems.find(i => i.id === 'item5')?.count || 0;
+        let discountMult = Math.max(0.2, 1 - (discountCount * 0.1));
+
         businesses.forEach(b => {
+            let actualCost = Math.floor(b.cost * discountMult);
             const div = document.createElement('div');
             div.className = 'card-item';
             div.innerHTML = `
                 <div class="card-info">
                     <h4>${b.name} ${b.bought ? '(Куплено)' : ''}</h4>
-                    <p>Прибыль: +${b.cps} Бурмалды/сек</p>
+                    <p style="color:var(--neon-pink)">Прибыль: +${b.subCps.toLocaleString()} Подписчиков/сек</p>
                 </div>
-                <button class="btn-action" onclick="buyBusiness('${b.id}')" ${b.bought || score < b.cost ? 'disabled' : ''}>
-                    ${b.bought ? 'Владелец' : b.cost + ' 💰'}
+                <button class="btn-action" onclick="buyBusiness('${b.id}')" ${b.bought || score < actualCost ? 'disabled' : ''}>
+                    ${b.bought ? 'Владелец' : actualCost.toLocaleString() + ' 💰'}
                 </button>
             `;
             container.appendChild(div);
@@ -761,37 +866,43 @@
     }
 
     function buyBusiness(id) {
+        let discountCount = shopItems.find(i => i.id === 'item5')?.count || 0;
+        let discountMult = Math.max(0.2, 1 - (discountCount * 0.1));
+
         let b = businesses.find(bz => bz.id === id);
-        if (!b.bought && score >= b.cost) {
-            score -= b.cost;
+        let actualCost = Math.floor(b.cost * discountMult);
+
+        if (!b.bought && score >= actualCost) {
+            score -= actualCost;
             b.bought = true;
-            recalculateCps();
+            recalculateRates();
             renderBusiness();
             updateUI();
             saveGame();
         }
     }
 
-    // Правильное вращение аватарок 1..9 по кругу
     function updateAvatar() {
         const index = (mellLevel - 1) % mellAvatars.length;
         mellImg.src = mellAvatars[index];
     }
 
     function updateUI() {
-        scoreEl.innerText = Math.floor(score);
+        scoreEl.innerText = Math.floor(score).toLocaleString() + ' 💰';
         cpsEl.innerText = autoCps;
         clickPowerEl.innerText = clickPower;
+
+        document.getElementById('subs-count').innerText = Math.floor(subscribers).toLocaleString();
+        document.getElementById('subs-cps').innerText = subsCps.toLocaleString();
+        document.getElementById('dollars-count').innerText = Math.floor(dollars).toLocaleString() + ' $';
 
         document.getElementById('deposit-amount').innerText = Math.floor(bankDeposit).toLocaleString();
         document.getElementById('loan-amount').innerText = Math.floor(bankLoan).toLocaleString();
 
-        // Таймер кредита
         if (bankLoan > 0 && loanEndTime > 0) {
             let leftSec = Math.max(0, Math.floor((loanEndTime - Date.now()) / 1000));
-            document.getElementById('loan-timer-text').innerText = `Осталось времени: ${leftSec} сек.`;
+            document.getElementById('loan-timer-text').innerText = `Осталось времени на уплату: ${leftSec} сек.`;
             if (leftSec === 0) {
-                // Принудительное списание если срок вышел
                 score = Math.max(0, score - bankLoan);
                 bankLoan = 0;
                 loanEndTime = 0;
@@ -809,30 +920,45 @@
     document.getElementById('reset-btn').onclick = () => {
         if (confirm("Вы точно хотите сбросить весь прогресс?")) {
             isResetting = true;
-            localStorage.removeItem('mellstroy_clicker_v2');
+            localStorage.removeItem('mellstroy_clicker_v3');
             location.reload();
         }
     };
 
-    // Инициализация
+    // Старт
     loadGame();
     updateAvatar();
     updateUI();
 
-    // Таймер авто-дохода и 30-секундный цикл
+    // Главный Таймер (каждую секунду)
     setInterval(() => {
+        // Доход Бурмалды (только 1 авто-ферма)
         if (autoCps > 0) {
             score += autoCps;
         }
 
-        // Таймер обновления крипты и процента по вкладам (раз в 30 секунд)
+        // Доход Подписчиков (от бизнесов и предметов)
+        if (subsCps > 0) {
+            subscribers += subsCps;
+        }
+
+        // 30-секундный цикл
         cryptoTimer--;
         if (cryptoTimer <= 0) {
             cryptoTimer = 30;
             updateCryptoPrices();
 
+            // Процент по вкладу
             if (bankDeposit > 0) {
-                bankDeposit = Math.floor(bankDeposit * 1.05); // 5% на вклад каждые 30 сек
+                let depositBonusCount = shopItems.find(i => i.id === 'item3')?.count || 0;
+                let rate = 1.05 + (depositBonusCount * 0.01);
+                bankDeposit = Math.floor(bankDeposit * rate);
+            }
+
+            // Бесплатный доллар за ИИ-Менеджера
+            let freeDollarCount = shopItems.find(i => i.id === 'item8')?.count || 0;
+            if (freeDollarCount > 0) {
+                dollars += freeDollarCount;
             }
         }
         document.getElementById('timer-info').innerText = `Крипта/Вклад через: ${cryptoTimer}s`;
@@ -840,9 +966,9 @@
         updateUI();
     }, 1000);
 
-    // Автосохранение
     setInterval(saveGame, 3000);
     window.addEventListener('beforeunload', saveGame);
 </script>
 </body>
 </html>
+
